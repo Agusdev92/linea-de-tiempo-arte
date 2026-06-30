@@ -1,1 +1,758 @@
 # linea-de-tiempo-arte
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Línea de Tiempo del Arte</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0c0a;
+    --surface: #181410;
+    --card: #1e1a16;
+    --border: #2e2820;
+    --gold: #c9a84c;
+    --gold-dim: #7a6130;
+    --text: #e8e0d0;
+    --text-dim: #8a7f6e;
+    --text-faint: #4a4035;
+    --accent: #8b4a2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 72px 24px 56px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 6vw, 64px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .subtitle {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 28px 24px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(14,12,10,0.95);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+  nav a {
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  nav a:hover {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── PERIOD SECTION ── */
+  .period {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .period:last-child { border-bottom: none; }
+
+  .period-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .period-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    color: var(--text-faint);
+    line-height: 1;
+    min-width: 48px;
+    margin-top: 4px;
+  }
+  .period-meta { flex: 1; }
+  .period-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .period-dates {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .period-location {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* ── GRID INFO ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  @media (max-width: 600px) {
+    .info-grid { grid-template-columns: 1fr; }
+  }
+  .info-cell {
+    background: var(--surface);
+    padding: 20px 24px;
+  }
+  .info-cell.full { grid-column: 1 / -1; }
+  .info-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 10px;
+  }
+  .info-value {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .info-value ul {
+    list-style: none;
+    padding: 0;
+  }
+  .info-value ul li {
+    padding: 3px 0;
+    padding-left: 16px;
+    position: relative;
+    color: var(--text);
+  }
+  .info-value ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold-dim);
+    font-size: 11px;
+  }
+
+  /* ── OBRA CARD ── */
+  .obra-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .obra-img-wrap {
+    width: 100%;
+    aspect-ratio: 16/7;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .obra-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+    transition: opacity 0.3s;
+  }
+  .obra-img-wrap:hover img { opacity: 1; }
+  .obra-img-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-faint);
+    font-size: 13px;
+  }
+  .obra-img-placeholder svg { opacity: 0.3; }
+  .obra-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(14,12,10,0.85);
+    border: 1px solid var(--gold-dim);
+    padding: 4px 10px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .obra-body {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 32px;
+  }
+  @media (max-width: 500px) {
+    .obra-body { grid-template-columns: 1fr; }
+  }
+  .obra-title-wrap { grid-column: 1 / -1; }
+  .obra-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+    font-style: italic;
+  }
+  .obra-artist {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .obra-field { }
+  .obra-field-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 4px;
+  }
+  .obra-field-value {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .obra-desc { grid-column: 1 / -1; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 12px;
+    color: var(--text-faint);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Historia del Arte · Línea de tiempo</div>
+  <h1>Del Imperio Romano<br>al Arte <em>Románico</em></h1>
+  <div class="subtitle">Trabajo práctico individual · 23 / 06 / 2026</div>
+</header>
+
+<nav>
+  <a href="#roma">Roma</a>
+  <a href="#orient">Culturas Orientales</a>
+  <a href="#celta">Celta</a>
+  <a href="#vikingo">Vikingo</a>
+  <a href="#paleocristiano">Paleocristiano</a>
+  <a href="#bizantino">Bizantino</a>
+  <a href="#romanico">Románico</a>
+</nav>
+
+<main>
+
+  <!-- ══════════════ 1. ROMA ══════════════ -->
+  <section class="period" id="roma">
+    <div class="period-header">
+      <div class="period-num">I</div>
+      <div class="period-meta">
+        <h2 class="period-title">Arte de Roma</h2>
+        <span class="period-dates">509 a.C. — 476 d.C.</span>
+        <div class="period-location">📍 Península Itálica · Mediterráneo · Europa occidental, norte de África y Medio Oriente</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Contexto histórico</div>
+        <div class="info-value">Civilización que evolucionó de república a imperio. Heredó el arte griego y lo transformó con fines propagandísticos y de ingeniería civil.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Expresión elegida</div>
+        <div class="info-value"><strong>Arquitectura</strong></div>
+      </div>
+      <div class="info-cell full">
+        <div class="info-label">Características principales</div>
+        <div class="info-value">
+          <ul>
+            <li>Uso masivo del arco, la bóveda y la cúpula como soluciones estructurales propias</li>
+            <li>Hormigón romano (opus caementicium) como material revolucionario</li>
+            <li>Arte al servicio del Estado: glorificación del poder imperial</li>
+            <li>Retrato escultórico verista (rostros individualizados y realistas)</li>
+            <li>Pintura mural en interiores con perspectiva ilusionista (Pompeya)</li>
+            <li>Mosaicos policromos en pavimentos y paredes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="obra-card">
+      <div class="obra-img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/1280px-Colosseo_2020.jpg" alt="Coliseo Romano" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <div class="obra-badge">Obra ejemplo</div>
+      </div>
+      <div class="obra-body">
+        <div class="obra-title-wrap">
+          <div class="obra-name">Coliseo (Anfiteatro Flavio)</div>
+          <div class="obra-artist">Arquitectos imperiales bajo Vespasiano y Tito</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Fecha</div>
+          <div class="obra-field-value">70 — 80 d.C.</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Técnica / Material</div>
+          <div class="obra-field-value">Hormigón romano, travertino, mármol, ladrillo</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Ubicación</div>
+          <div class="obra-field-value">Roma, Italia</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Dimensiones</div>
+          <div class="obra-field-value">188 × 156 m · 48 m de altura · 50 000 espectadores</div>
+        </div>
+        <div class="obra-field obra-desc">
+          <div class="obra-field-label">Características del estilo visibles en la obra</div>
+          <div class="obra-field-value">Combina los tres órdenes griegos (dórico, jónico, corintio) en fachadas superpuestas. El uso del arco de medio punto y las bóvedas de cañón en los túneles interiores demuestra el dominio técnico romano. Símbolo del poder imperial y la ingeniería como herramienta política.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 2. CULTURAS ORIENTALES ══════════════ -->
+  <section class="period" id="orient">
+    <div class="period-header">
+      <div class="period-num">II</div>
+      <div class="period-meta">
+        <h2 class="period-title">Culturas Orientales</h2>
+        <span class="period-dates">s. III a.C. — s. XV d.C.</span>
+        <div class="period-location">📍 China · India · Mundo islámico (Persia, Arabia, Andalucía)</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Contexto histórico</div>
+        <div class="info-value">Tres grandes tradiciones artísticas independientes del mundo occidental, cada una vinculada a sistemas filosóficos y religiosos propios: budismo, hinduismo e islam.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Expresión elegida</div>
+        <div class="info-value"><strong>Arquitectura</strong></div>
+      </div>
+      <div class="info-cell full">
+        <div class="info-label">Características principales</div>
+        <div class="info-value">
+          <ul>
+            <li><strong>China:</strong> lacado, porcelana, jardines como arte total; líneas curvas en cubiertas (tejas vidriadas); caligrafía como expresión mayor</li>
+            <li><strong>India:</strong> escultura desbordante en templos; representación de divinidades con múltiples brazos; geometría mandálica en plantas</li>
+            <li><strong>Islam:</strong> prohibición de la figura humana → geometría, caligrafía coránica y arabescos vegetales; azulejo y mocárabes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="obra-card">
+      <div class="obra-img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/19084-Alhambra_%289360802408%29.jpg/1280px-19084-Alhambra_%289360802408%29.jpg" alt="Alhambra de Granada" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <div class="obra-badge">Obra ejemplo · Arte Islámico</div>
+      </div>
+      <div class="obra-body">
+        <div class="obra-title-wrap">
+          <div class="obra-name">Patio de los Leones, La Alhambra</div>
+          <div class="obra-artist">Arquitectos nazaríes bajo Muhammad V</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Fecha</div>
+          <div class="obra-field-value">1370 — 1391 d.C.</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Técnica / Material</div>
+          <div class="obra-field-value">Mármol, mocárabes de yeso, azulejo (alicatado), fuente con leones</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Ubicación</div>
+          <div class="obra-field-value">Granada, España (Al-Ándalus)</div>
+        </div>
+        <div class="obra-field obra-desc">
+          <div class="obra-field-label">Características del estilo visibles en la obra</div>
+          <div class="obra-field-value">Ausencia total de representación humana en los relieves. Arabesco geométrico repetitivo en paredes y techos. Caligrafía coránica integrada como ornamento. Los mocárabes (estalactitas de yeso) crean techos que parecen disolver la materia. La fuente con leones —excepción figurativa— es símbolo de poder califal.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 3. CELTA ══════════════ -->
+  <section class="period" id="celta">
+    <div class="period-header">
+      <div class="period-num">III</div>
+      <div class="period-meta">
+        <h2 class="period-title">Arte Celta</h2>
+        <span class="period-dates">800 a.C. — s. V d.C.</span>
+        <div class="period-location">📍 Europa central y occidental: Irlanda, Britania, Galia, Iberia</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Contexto histórico</div>
+        <div class="info-value">Cultura de la Edad de Hierro sin escritura propia. Arte vinculado a rituales, creencias druídicas y la cultura guerrera. Sobrevivió especialmente en las Islas Británicas.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Expresión elegida</div>
+        <div class="info-value"><strong>Grabado / Orfebrería</strong></div>
+      </div>
+      <div class="info-cell full">
+        <div class="info-label">Características principales</div>
+        <div class="info-value">
+          <ul>
+            <li>Ornamentación abstracta: espirales, triskeles, entrelazados y volutas continuas</li>
+            <li>Preferencia por la línea curva; rechazo del naturalismo griego o romano</li>
+            <li>Excelencia en metalurgia: torques, broches, calderos y cascos decorados</li>
+            <li>Arte insular posterior: iluminación de manuscritos con interlazados zoomorfo-vegetales</li>
+            <li>La figura humana aparece muy estilizada o simbólica, nunca realista</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="obra-card">
+      <div class="obra-img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Kells_chi_rho.jpg/1024px-Kells_chi_rho.jpg" alt="Libro de Kells" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <div class="obra-badge">Obra ejemplo</div>
+      </div>
+      <div class="obra-body">
+        <div class="obra-title-wrap">
+          <div class="obra-name">Libro de Kells — Folio Chi-Rho</div>
+          <div class="obra-artist">Monjes irlandeses (tradición insular celta)</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Fecha</div>
+          <div class="obra-field-value">c. 800 d.C.</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Técnica / Material</div>
+          <div class="obra-field-value">Iluminación de manuscrito sobre vitela, pigmentos minerales y orgánicos, pan de oro</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Ubicación</div>
+          <div class="obra-field-value">Trinity College, Dublín, Irlanda</div>
+        </div>
+        <div class="obra-field obra-desc">
+          <div class="obra-field-label">Características del estilo visibles en la obra</div>
+          <div class="obra-field-value">Interlazados continuos que cubren toda la superficie sin dejar vacíos (horror vacui). Figuras zoomorfas entretejidas en los bordes (perros, aves, figuras humanas). La ausencia de perspectiva y la abstracción son características típicamente celtas. El manuscrito es la cima del arte insular cristiano-celta.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 4. VIKINGO ══════════════ -->
+  <section class="period" id="vikingo">
+    <div class="period-header">
+      <div class="period-num">IV</div>
+      <div class="period-meta">
+        <h2 class="period-title">Arte Vikingo</h2>
+        <span class="period-dates">793 — 1100 d.C.</span>
+        <div class="period-location">📍 Escandinavia (Noruega, Dinamarca, Suecia) · Islandia · Costas de Europa e Inglaterra</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Contexto histórico</div>
+        <div class="info-value">Cultura nórdica marinera y guerrera. Período de expansión por saqueos y comercio. Religión politeísta (mitología nórdica). Sociedad fuertemente oral; las imágenes sustituían la escritura.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Expresión elegida</div>
+        <div class="info-value"><strong>Escultura / Talla</strong></div>
+      </div>
+      <div class="info-cell full">
+        <div class="info-label">Características principales</div>
+        <div class="info-value">
+          <ul>
+            <li>Estilo zoomorfo: animales entrelazados y monstruosos que se devoran entre sí</li>
+            <li>Talla en madera y marfil: proas de barcos, ajuares funerarios, cofres</li>
+            <li>Runas grabadas en piedras conmemorativas (piedras rúnicas)</li>
+            <li>Orfebrería en plata: fíbulas, broches, brazaletes con formas animales</li>
+            <li>Distintos estilos dentro del período: Oseberg, Borre, Mammen, Urnes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="obra-card">
+      <div class="obra-img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Osebergskipet_2019_%2801%29.jpg/1280px-Osebergskipet_2019_%2801%29.jpg" alt="Barco de Oseberg" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <div class="obra-badge">Obra ejemplo</div>
+      </div>
+      <div class="obra-body">
+        <div class="obra-title-wrap">
+          <div class="obra-name">Barco de Oseberg</div>
+          <div class="obra-artist">Artesanos vikingos anónimos · Estilo Oseberg</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Fecha</div>
+          <div class="obra-field-value">c. 820 d.C. (hallado 1904)</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Técnica / Material</div>
+          <div class="obra-field-value">Talla en madera de roble, construcción naval en tingladillo</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Ubicación</div>
+          <div class="obra-field-value">Museo de Barcos Vikingos, Oslo, Noruega</div>
+        </div>
+        <div class="obra-field obra-desc">
+          <div class="obra-field-label">Características del estilo visibles en la obra</div>
+          <div class="obra-field-value">La proa y la popa están talladas con animales entrelazados en alto relieve (estilo Oseberg). La forma serpentina del casco completo convierte al barco en una escultura funcional. Fue hallado como cámara funeraria de una reina: el barco era el vehículo al más allá en la cosmovisión nórdica.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 5. PALEOCRISTIANO ══════════════ -->
+  <section class="period" id="paleocristiano">
+    <div class="period-header">
+      <div class="period-num">V</div>
+      <div class="period-meta">
+        <h2 class="period-title">Arte Paleocristiano</h2>
+        <span class="period-dates">s. I — s. VI d.C.</span>
+        <div class="period-location">📍 Roma · Ravena · Alejandría · Antioquía · Bizancio (primeras comunidades cristianas)</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Contexto histórico</div>
+        <div class="info-value">Arte surgido en las catacumbas durante las persecuciones romanas. Tras el Edicto de Milán (313 d.C.), el cristianismo es oficial y el arte pasa a las basílicas públicas.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Expresión elegida</div>
+        <div class="info-value"><strong>Pintura (catacumbas)</strong></div>
+      </div>
+      <div class="info-cell full">
+        <div class="info-label">Características principales</div>
+        <div class="info-value">
+          <ul>
+            <li>Sistema de símbolos secretos: pez (ichtys), crismón, paloma, cordero</li>
+            <li>Adaptación de tipologías romanas: la basílica civil se convierte en templo</li>
+            <li>Mosaicos en ábsides con fondo de oro que anticipa el arte bizantino</li>
+            <li>Figuras hieráticas y frontales; abandono del naturalismo clásico</li>
+            <li>Narrativa bíblica en sarcófagos esculpidos (Buen Pastor, Jonás, Daniel)</li>
+            <li>Interés en el mensaje espiritual por sobre la belleza formal</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="obra-card">
+      <div class="obra-img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Good_shepherd_01_small.jpg/800px-Good_shepherd_01_small.jpg" alt="El Buen Pastor - catacumba" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <div class="obra-badge">Obra ejemplo</div>
+      </div>
+      <div class="obra-body">
+        <div class="obra-title-wrap">
+          <div class="obra-name">El Buen Pastor</div>
+          <div class="obra-artist">Anónimo paleocristiano</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Fecha</div>
+          <div class="obra-field-value">c. 300 d.C.</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Técnica / Material</div>
+          <div class="obra-field-value">Fresco sobre argamasa · Catacumba de Priscila, Roma</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Ubicación</div>
+          <div class="obra-field-value">Catacumba de Priscila, Roma, Italia</div>
+        </div>
+        <div class="obra-field obra-desc">
+          <div class="obra-field-label">Características del estilo visibles en la obra</div>
+          <div class="obra-field-value">Cristo representado como un joven imberbe cargando un cordero (iconografía del kriophoros griego adaptada). Estilo pictórico heredado del retrato romano pero simplificado y esquematizado. La obra funciona como imagen de consuelo y esperanza para comunidades en clandestinidad: el contenido espiritual prima sobre la destreza técnica.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 6. BIZANTINO ══════════════ -->
+  <section class="period" id="bizantino">
+    <div class="period-header">
+      <div class="period-num">VI</div>
+      <div class="period-meta">
+        <h2 class="period-title">Arte Bizantino</h2>
+        <span class="period-dates">330 — 1453 d.C.</span>
+        <div class="period-location">📍 Constantinopla (Estambul) · Ravena · Grecia · Medio Oriente cristiano</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Contexto histórico</div>
+        <div class="info-value">Imperio Romano de Oriente con capital en Constantinopla. Arte totalmente al servicio de la Iglesia Ortodoxa. Gran debate iconoclasta (726–843 d.C.) sobre el uso de imágenes sagradas.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Expresión elegida</div>
+        <div class="info-value"><strong>Mosaico</strong></div>
+      </div>
+      <div class="info-cell full">
+        <div class="info-label">Características principales</div>
+        <div class="info-value">
+          <ul>
+            <li>Fondo dorado en mosaicos: simboliza la luz divina y el espacio celestial atemporal</li>
+            <li>Figuras hieráticas, frontales, con ojos grandes y mirada penetrante</li>
+            <li>Ausencia de perspectiva y volumen: el cuerpo importa menos que el espíritu</li>
+            <li>Canon alargado y estilizado de las figuras</li>
+            <li>Iconos sobre tabla: imágenes sagradas con función litúrgica y devocional</li>
+            <li>Cúpulas sobre pechinas (solución arquitectónica clave): Santa Sofía</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="obra-card">
+      <div class="obra-img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Mosaico_di_San_Vitale_-_Giustiniano_e_la_sua_corte.jpg/1280px-Mosaico_di_San_Vitale_-_Giustiniano_e_la_sua_corte.jpg" alt="Mosaico de Justiniano - San Vitale" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <div class="obra-badge">Obra ejemplo</div>
+      </div>
+      <div class="obra-body">
+        <div class="obra-title-wrap">
+          <div class="obra-name">Mosaico del Emperador Justiniano y su corte</div>
+          <div class="obra-artist">Anónimo · Taller imperial bizantino</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Fecha</div>
+          <div class="obra-field-value">c. 547 d.C.</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Técnica / Material</div>
+          <div class="obra-field-value">Mosaico de teselas de vidrio, oro y piedra · Ábside de San Vitale</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Ubicación</div>
+          <div class="obra-field-value">Basílica de San Vitale, Ravena, Italia</div>
+        </div>
+        <div class="obra-field obra-desc">
+          <div class="obra-field-label">Características del estilo visibles en la obra</div>
+          <div class="obra-field-value">Figuras completamente frontales, sin movimiento ni expresión individual. Fondo dorado uniforme que elimina todo espacio terrenal. Las figuras "flotan" sin apoyo en el suelo (pies en punta). La jerarquía se marca por tamaño y posición central del Emperador, con nimbo como Cristo. Fusión del poder político y divino característica del arte de Estado bizantino.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 7. ROMÁNICO ══════════════ -->
+  <section class="period" id="romanico">
+    <div class="period-header">
+      <div class="period-num">VII</div>
+      <div class="period-meta">
+        <h2 class="period-title">Arte Románico</h2>
+        <span class="period-dates">s. X — s. XII d.C.</span>
+        <div class="period-location">📍 Europa occidental: Francia, España (Camino de Santiago), Italia, Alemania, norte de Italia</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Contexto histórico</div>
+        <div class="info-value">Feudalismo europeo, expansión del monacato (Cluny). Arte ligado a la peregrinación y la evangelización. "Primera lengua común" visual de Europa cristiana occidental.</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Expresión elegida</div>
+        <div class="info-value"><strong>Arquitectura</strong></div>
+      </div>
+      <div class="info-cell full">
+        <div class="info-label">Características principales</div>
+        <div class="info-value">
+          <ul>
+            <li>Arco de medio punto como elemento estructural y decorativo fundamental</li>
+            <li>Muros gruesos con pequeñas ventanas → interiores oscuros y pesados</li>
+            <li>Torres macizas y plantas en cruz latina o basilical</li>
+            <li>Escultura integrada al edificio: tímpanos, capiteles historiados con bestiarios</li>
+            <li>Pintura mural en ábsides con figuras hieráticas de herencia bizantina</li>
+            <li>Arte pedagógico: "biblia de los pobres" — los iletrados aprenden por imágenes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="obra-card">
+      <div class="obra-img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Santiago_de_compostela_cathedral.jpg/1280px-Santiago_de_compostela_cathedral.jpg" alt="Catedral de Santiago de Compostela" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <div class="obra-badge">Obra ejemplo</div>
+      </div>
+      <div class="obra-body">
+        <div class="obra-title-wrap">
+          <div class="obra-name">Catedral de Santiago de Compostela</div>
+          <div class="obra-artist">Maestro Esteban y otros arquitectos del Camino</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Fecha</div>
+          <div class="obra-field-value">1075 — 1211 d.C.</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Técnica / Material</div>
+          <div class="obra-field-value">Mampostería de granito · Bóvedas de cañón y aristas · Planta de cruz latina con girola</div>
+        </div>
+        <div class="obra-field">
+          <div class="obra-field-label">Ubicación</div>
+          <div class="obra-field-value">Santiago de Compostela, Galicia, España</div>
+        </div>
+        <div class="obra-field obra-desc">
+          <div class="obra-field-label">Características del estilo visibles en la obra</div>
+          <div class="obra-field-value">Planta de peregrinación con girola (deambulatorio) para permitir la circulación de peregrinos alrededor del altar. Bóvedas de cañón continuas sobre la nave central. Pórtico de la Gloria (1188) con tímpano escultórico policromado — obra maestra del románico tardío en piedra. Los arcos de medio punto articulan portadas, ventanas y arcadas interiores.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Trabajo práctico individual · Historia del Arte · 2026
+</footer>
+
+</body>
+</html>
