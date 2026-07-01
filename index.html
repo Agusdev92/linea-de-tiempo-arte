@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tostado — Café de especialidad</title>
+<meta name="description" content="Café de especialidad tostado en pequeños lotes en Chacarita, Buenos Aires. Filtrados, espresso y cold brew de origen único, trazabilidad de finca a taza.">
+<meta name="theme-color" content="#171310">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%23171310'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%23c4652e' stroke-width='6'/%3E%3C/svg%3E">
+<meta property="og:type" content="business.business">
+<meta property="og:title" content="Tostado — Café de especialidad">
+<meta property="og:description" content="Café de especialidad tostado en pequeños lotes en Chacarita, Buenos Aires. Filtrados, espresso y cold brew de origen único.">
+<meta property="og:locale" content="es_AR">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -86,7 +94,38 @@
     transition:background .2s ease, color .2s ease;
   }
   .nav-cta:hover{ background:var(--accent); color:var(--bg); }
-  @media(max-width:800px){ .nav-links{ display:none; } }
+
+  .nav-toggle{
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    gap:5px;
+    width:32px; height:32px;
+    background:none; border:none; cursor:pointer;
+    padding:0;
+  }
+  .nav-toggle span{
+    display:block; width:100%; height:1px;
+    background:var(--text); transition:transform .25s ease, opacity .25s ease;
+  }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
+
+  @media(max-width:800px){
+    .nav-links{
+      position:absolute; top:76px; left:0; right:0;
+      flex-direction:column; gap:0;
+      background:var(--bg-alt);
+      border-bottom:1px solid var(--line);
+      max-height:0; overflow:hidden;
+      transition:max-height .3s ease;
+    }
+    .nav-links.open{ max-height:260px; }
+    .nav-links a{ padding:18px 20px; border-top:1px solid var(--line); }
+    .nav-links a:first-child{ border-top:none; }
+    .nav-toggle{ display:flex; }
+  }
 
   /* ---------- hero ---------- */
   .hero{
@@ -361,12 +400,15 @@
 <nav>
   <div class="wrap">
     <div class="brand">Tostado<span>.</span></div>
-    <div class="nav-links">
+    <div class="nav-links" id="nav-links">
       <a href="#menu">Menú</a>
       <a href="#historia">Historia</a>
       <a href="#ubicacion">Ubicación</a>
     </div>
-    <a href="#contacto" class="nav-cta">Reservar mesa</a>
+    <a href="https://wa.me/5491123456789?text=Hola%2C%20quiero%20reservar%20una%20mesa%20en%20Tostado" target="_blank" rel="noopener" class="nav-cta">Reservar mesa</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -453,9 +495,9 @@
   <div class="wrap">
     <div class="reveal">
       <h2>Visitanos</h2>
-      <div class="info-row"><div class="k">Dirección</div><div class="v">Av. Corrientes 4820, CABA</div></div>
-      <div class="info-row"><div class="k">Teléfono</div><div class="v">+54 11 2345-6789</div></div>
-      <div class="info-row"><div class="k">Instagram</div><div class="v">@tostado.cafe</div></div>
+      <div class="info-row"><div class="k">Dirección</div><div class="v"><a href="https://maps.google.com/?q=Av.+Corrientes+4820,+CABA" target="_blank" rel="noopener">Av. Corrientes 4820, CABA</a></div></div>
+      <div class="info-row"><div class="k">Teléfono</div><div class="v"><a href="tel:+541123456789">+54 11 2345-6789</a></div></div>
+      <div class="info-row"><div class="k">Instagram</div><div class="v"><a href="https://instagram.com/tostado.cafe" target="_blank" rel="noopener">@tostado.cafe</a></div></div>
     </div>
     <div class="reveal">
       <div class="hours-table">
@@ -470,7 +512,7 @@
 <footer id="contacto">
   <div class="wrap">
     <h2 class="reveal">¿Nos hacemos un <em>café</em>?</h2>
-    <a href="#" class="btn-primary reveal">Reservar mesa</a>
+    <a href="https://wa.me/5491123456789?text=Hola%2C%20quiero%20reservar%20una%20mesa%20en%20Tostado" target="_blank" rel="noopener" class="btn-primary reveal">Reservar mesa</a>
     <div class="foot-meta">
       <span>Tostado — Café de especialidad</span>
       <span>© 2026 · Buenos Aires</span>
@@ -479,6 +521,21 @@
 </footer>
 
 <script>
+  const navToggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+  navToggle.addEventListener('click', ()=>{
+    const isOpen = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+    navToggle.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+  });
+  navLinks.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click', ()=>{
+      navLinks.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.setAttribute('aria-label', 'Abrir menú');
+    });
+  });
+
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
@@ -490,3 +547,4 @@
 
 </body>
 </html>
+
