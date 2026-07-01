@@ -285,6 +285,70 @@
     color: var(--text-faint);
     border-top: 1px solid var(--border);
   }
+
+  .print-btn-wrap {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 200;
+  }
+  .print-btn {
+    background: var(--gold);
+    color: #0e0c0a;
+    border: none;
+    padding: 12px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  .print-btn:hover { background: #dcb95c; }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    body {
+      background: #fff;
+      color: #1a1a1a;
+      font-size: 11pt;
+    }
+    nav, .print-btn-wrap { display: none !important; }
+    header {
+      padding: 20px 0 24px;
+      border-bottom: 2px solid #1a1a1a;
+    }
+    header::before { display: none; }
+    .eyebrow { color: #7a5a1a; }
+    h1 { color: #1a1a1a; font-size: 28pt; }
+    h1 em { color: #7a5a1a; }
+    .subtitle { color: #555; }
+    main { max-width: 100%; padding: 0 10px; }
+    .period {
+      padding: 24px 0 20px;
+      border-bottom: 1px solid #ccc;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .period-num { color: #ccc; font-size: 32pt; }
+    .period-title { color: #1a1a1a; font-size: 18pt; }
+    .period-dates { color: #7a5a1a; }
+    .period-location { color: #444; }
+    .info-grid { border-color: #aaa; background: #aaa; }
+    .info-cell { background: #f7f5f0; padding: 12px 16px; }
+    .info-label { color: #7a5a1a; }
+    .info-value, .info-value ul li { color: #1a1a1a; }
+    .obra-card { background: #f7f5f0; border-color: #aaa; }
+    .obra-img-wrap { aspect-ratio: 16/9; }
+    .obra-img-wrap img { opacity: 1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .obra-badge { background: #fff; color: #1a1a1a; border-color: #7a5a1a; }
+    .obra-name { color: #1a1a1a; }
+    .obra-artist { color: #555; }
+    .obra-field-label { color: #7a5a1a; }
+    .obra-field-value { color: #1a1a1a; }
+    footer { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -342,7 +406,7 @@
     </div>
     <div class="obra-card">
       <div class="obra-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/1280px-Colosseo_2020.jpg" alt="Coliseo Romano" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <img referrerpolicy="no-referrer" loading="eager" src="https://upload.wikimedia.org/wikipedia/commons/d/de/Colosseo_2020.jpg" alt="Coliseo Romano" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
         <div class="obra-badge">Obra ejemplo</div>
       </div>
       <div class="obra-body">
@@ -406,7 +470,7 @@
     </div>
     <div class="obra-card">
       <div class="obra-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/19084-Alhambra_%289360802408%29.jpg/1280px-19084-Alhambra_%289360802408%29.jpg" alt="Alhambra de Granada" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <img referrerpolicy="no-referrer" loading="eager" src="https://upload.wikimedia.org/wikipedia/commons/1/10/19084-Alhambra_%289360802408%29.jpg" alt="Alhambra de Granada" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
         <div class="obra-badge">Obra ejemplo · Arte Islámico</div>
       </div>
       <div class="obra-body">
@@ -468,7 +532,7 @@
     </div>
     <div class="obra-card">
       <div class="obra-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Kells_chi_rho.jpg/1024px-Kells_chi_rho.jpg" alt="Libro de Kells" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <img referrerpolicy="no-referrer" loading="eager" src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Kells_chi_rho.jpg" alt="Libro de Kells" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
         <div class="obra-badge">Obra ejemplo</div>
       </div>
       <div class="obra-body">
@@ -530,7 +594,7 @@
     </div>
     <div class="obra-card">
       <div class="obra-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Osebergskipet_2019_%2801%29.jpg/1280px-Osebergskipet_2019_%2801%29.jpg" alt="Barco de Oseberg" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <img referrerpolicy="no-referrer" loading="eager" src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Osebergskipet_2019_%2801%29.jpg" alt="Barco de Oseberg" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
         <div class="obra-badge">Obra ejemplo</div>
       </div>
       <div class="obra-body">
@@ -593,7 +657,7 @@
     </div>
     <div class="obra-card">
       <div class="obra-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Good_shepherd_01_small.jpg/800px-Good_shepherd_01_small.jpg" alt="El Buen Pastor - catacumba" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <img referrerpolicy="no-referrer" loading="eager" src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Good_shepherd_01_small.jpg" alt="El Buen Pastor - catacumba" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
         <div class="obra-badge">Obra ejemplo</div>
       </div>
       <div class="obra-body">
@@ -656,7 +720,7 @@
     </div>
     <div class="obra-card">
       <div class="obra-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Mosaico_di_San_Vitale_-_Giustiniano_e_la_sua_corte.jpg/1280px-Mosaico_di_San_Vitale_-_Giustiniano_e_la_sua_corte.jpg" alt="Mosaico de Justiniano - San Vitale" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <img referrerpolicy="no-referrer" loading="eager" src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Mosaico_di_San_Vitale_-_Giustiniano_e_la_sua_corte.jpg" alt="Mosaico de Justiniano - San Vitale" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
         <div class="obra-badge">Obra ejemplo</div>
       </div>
       <div class="obra-body">
@@ -719,7 +783,7 @@
     </div>
     <div class="obra-card">
       <div class="obra-img-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Santiago_de_compostela_cathedral.jpg/1280px-Santiago_de_compostela_cathedral.jpg" alt="Catedral de Santiago de Compostela" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
+        <img referrerpolicy="no-referrer" loading="eager" src="https://upload.wikimedia.org/wikipedia/commons/6/61/Santiago_de_compostela_cathedral.jpg" alt="Catedral de Santiago de Compostela" onerror="this.parentElement.innerHTML='<div class=obra-img-placeholder><svg width=48 height=48 viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=12 cy=12 r=4/></svg><span>Imagen no disponible</span></div>'">
         <div class="obra-badge">Obra ejemplo</div>
       </div>
       <div class="obra-body">
@@ -752,6 +816,10 @@
 <footer>
   Trabajo práctico individual · Historia del Arte · 2026
 </footer>
+
+<div class="print-btn-wrap">
+  <button class="print-btn" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+</div>
 
 </body>
 </html>
